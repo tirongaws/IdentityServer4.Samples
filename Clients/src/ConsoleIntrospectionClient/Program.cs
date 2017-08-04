@@ -16,11 +16,12 @@ namespace ConsoleIntrospectionClient
 
             var response = await RequestTokenAsync();
             await IntrospectAsync(response.AccessToken);
+            Console.Read();
         }
 
         static async Task<TokenResponse> RequestTokenAsync()
         {
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
             if (disco.IsError) throw new Exception(disco.Error);
 
             var client = new TokenClient(
@@ -33,7 +34,7 @@ namespace ConsoleIntrospectionClient
 
         private static async Task IntrospectAsync(string accessToken)
         {
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
             if (disco.IsError) throw new Exception(disco.Error);
 
             var client = new IntrospectionClient(
@@ -63,6 +64,15 @@ namespace ConsoleIntrospectionClient
                 {
                     Console.WriteLine("token is not active");
                 }
+            }
+        }
+
+        public static async Task<DiscoveryResponse> GetAsync(string authority)
+        {
+            using (var client = new DiscoveryClient(authority))
+            {
+                client.Policy.RequireHttps = false;
+                return await client.GetAsync().ConfigureAwait(false);
             }
         }
     }

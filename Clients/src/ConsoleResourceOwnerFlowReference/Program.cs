@@ -20,11 +20,12 @@ namespace ConsoleResourceOwnerFlowReference
 
             Console.ReadLine();
             await CallServiceAsync(response.AccessToken);
+            Console.ReadLine();
         }
 
         static async Task<TokenResponse> RequestTokenAsync()
         {
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
             if (disco.IsError) throw new Exception(disco.Error);
 
             var client = new TokenClient(
@@ -54,6 +55,15 @@ namespace ConsoleResourceOwnerFlowReference
                 Console.WriteLine(JArray.Parse(response));
 
                 Console.ReadLine();
+            }
+        }
+
+        public static async Task<DiscoveryResponse> GetAsync(string authority)
+        {
+            using (var client = new DiscoveryClient(authority))
+            {
+                client.Policy.RequireHttps = false;
+                return await client.GetAsync().ConfigureAwait(false);
             }
         }
     }

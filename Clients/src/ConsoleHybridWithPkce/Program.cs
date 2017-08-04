@@ -41,7 +41,8 @@ namespace ConsoleClientWithBrowser
                 RedirectUri = redirectUri,
                 Scope = "openid profile api1",
                 FilterClaims = false,
-                Browser = browser
+                Browser = browser,
+                
             };
 
             var serilog = new LoggerConfiguration()
@@ -51,8 +52,9 @@ namespace ConsoleClientWithBrowser
                 .CreateLogger();
 
             options.LoggerFactory.AddSerilog(serilog);
-
+            options.Policy.Discovery.RequireHttps = false;
             _oidcClient = new OidcClient(options);
+            
             var result = await _oidcClient.LoginAsync();
 
             ShowResult(result);
@@ -131,5 +133,6 @@ namespace ConsoleClientWithBrowser
                 Console.WriteLine($"Error: {response.ReasonPhrase}");
             }
         }
+        
     }
 }

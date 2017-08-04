@@ -17,11 +17,12 @@ namespace ConsoleResourceOwnerFlowUserInfo
             response.Show();
 
             await GetClaimsAsync(response.AccessToken);
+            Console.ReadLine();
         }
 
         static async Task<TokenResponse> RequestTokenAsync()
         {
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
             if (disco.IsError) throw new Exception(disco.Error);
 
             var client = new TokenClient(
@@ -34,7 +35,7 @@ namespace ConsoleResourceOwnerFlowUserInfo
 
         static async Task GetClaimsAsync(string token)
         {
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
             if (disco.IsError) throw new Exception(disco.Error);
 
             var client = new UserInfoClient(disco.UserInfoEndpoint);
@@ -46,6 +47,15 @@ namespace ConsoleResourceOwnerFlowUserInfo
             foreach (var claim in response.Claims)
             {
                 Console.WriteLine("{0}\n {1}", claim.Type, claim.Value);
+            }
+        }
+
+        public static async Task<DiscoveryResponse> GetAsync(string authority)
+        {
+            using (var client = new DiscoveryClient(authority))
+            {
+                client.Policy.RequireHttps = false;
+                return await client.GetAsync().ConfigureAwait(false);
             }
         }
     }

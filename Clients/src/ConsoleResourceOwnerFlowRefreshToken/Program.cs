@@ -19,7 +19,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         {
             Console.Title = "Console ResourceOwner Flow RefreshToken";
 
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
             if (disco.IsError) throw new Exception(disco.Error);
 
             _tokenClient = new TokenClient(
@@ -53,7 +53,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         {
             return await _tokenClient.RequestResourceOwnerPasswordAsync(
                 "bob",
-                "bob", 
+                "bob",
                 "api1 api2.read_only offline_access");
         }
 
@@ -113,6 +113,15 @@ namespace ConsoleResourceOwnerFlowRefreshToken
                     "Protocol error response:".ConsoleGreen();
                     Console.WriteLine(response.Json);
                 }
+            }
+        }
+
+        public static async Task<DiscoveryResponse> GetAsync(string authority)
+        {
+            using (var client = new DiscoveryClient(authority))
+            {
+                client.Policy.RequireHttps = false;
+                return await client.GetAsync().ConfigureAwait(false);
             }
         }
     }

@@ -43,7 +43,7 @@ namespace MvcImplicit.Controllers
         private async Task<IActionResult> StartAuthentication()
         {
             // read discovery document to find authorize endpoint
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
 
             var authorizeUrl = new AuthorizeRequest(disco.AuthorizeEndpoint).CreateAuthorizeUrl(
                 clientId: "mvc.manual",
@@ -56,7 +56,14 @@ namespace MvcImplicit.Controllers
 
             return Redirect(authorizeUrl);
         }
-
+        public static async Task<DiscoveryResponse> GetAsync(string authority)
+        {
+            using (var client = new DiscoveryClient(authority))
+            {
+                client.Policy.RequireHttps = false;
+                return await client.GetAsync().ConfigureAwait(false);
+            }
+        }
         public async Task<IActionResult> Callback()
         {
             var state = Request.Form["state"].FirstOrDefault();
@@ -75,7 +82,7 @@ namespace MvcImplicit.Controllers
         private async Task<ClaimsPrincipal> ValidateIdentityToken(string idToken)
         {
             // read discovery document to find issuer and key material
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
 
             var keys = new List<SecurityKey>();
             foreach (var webKey in disco.KeySet.Keys)

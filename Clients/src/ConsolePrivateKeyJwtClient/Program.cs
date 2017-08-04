@@ -26,11 +26,12 @@ namespace ConsolePrivateKeyJwtClient
 
             Console.ReadLine();
             await CallServiceAsync(response.AccessToken);
+            Console.ReadLine();
         }
 
         static async Task<TokenResponse> RequestTokenAsync()
         {
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
             if (disco.IsError) throw new Exception(disco.Error);
 
             var clientToken = CreateClientToken("client.jwt", disco.TokenEndpoint);
@@ -42,7 +43,8 @@ namespace ConsolePrivateKeyJwtClient
                 client_assertion = clientToken
             };
 
-            return await client.RequestClientCredentialsAsync("api1", assertion);
+            var response= await client.RequestClientCredentialsAsync("api1", assertion);
+            return response;
         }
 
         static async Task CallServiceAsync(string token)
@@ -85,6 +87,15 @@ namespace ConsolePrivateKeyJwtClient
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
+        }
+
+        public static async Task<DiscoveryResponse> GetAsync(string authority)
+        {
+            using (var client = new DiscoveryClient(authority))
+            {
+                client.Policy.RequireHttps = false;
+                return await client.GetAsync().ConfigureAwait(false);
+            }
         }
     }
 }

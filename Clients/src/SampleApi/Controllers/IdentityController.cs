@@ -11,8 +11,10 @@ namespace SampleApi.Controllers
         [HttpGet]
         public ActionResult Get()
         {
-            return new JsonResult(User.Claims.Select(
-                c => new { c.Type, c.Value }));
+            var user = this.User;
+            var result = User.Claims.Select(
+                c => new { c.Type, c.Value });
+            return new JsonResult(result);
         }
     }
 }

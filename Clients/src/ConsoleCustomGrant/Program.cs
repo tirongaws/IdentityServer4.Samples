@@ -31,11 +31,12 @@ namespace ConsoleCustomGrant
 
             Console.ReadLine();
             await CallServiceAsync(response.AccessToken);
+            Console.ReadLine();
         }
 
         static async Task<TokenResponse> RequestTokenAsync(string grantType)
         {
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
             if (disco.IsError) throw new Exception(disco.Error);
 
             var client = new TokenClient(
@@ -45,7 +46,7 @@ namespace ConsoleCustomGrant
 
             var customParameters = new Dictionary<string, string>
                 {
-                    { "custom_credential", "custom credential"}
+                    { "custom_credential", "custom credential11111111111"}
                 };
 
             return await client.RequestCustomGrantAsync(grantType, "api1", customParameters);
@@ -65,6 +66,15 @@ namespace ConsoleCustomGrant
 
             "\n\nService claims:".ConsoleGreen();
             Console.WriteLine(JArray.Parse(response));
+        }
+
+        public static async Task<DiscoveryResponse> GetAsync(string authority)
+        {
+            using (var client = new DiscoveryClient(authority))
+            {
+                client.Policy.RequireHttps = false;
+                return await client.GetAsync().ConfigureAwait(false);
+            }
         }
     }
 }

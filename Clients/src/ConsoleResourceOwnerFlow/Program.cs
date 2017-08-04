@@ -20,11 +20,12 @@ namespace ConsoleResourceOwnerFlow
 
             Console.ReadLine();
             await CallServiceAsync(response.AccessToken);
+            Console.ReadLine();
         }
 
         static async Task<TokenResponse> RequestTokenAsync()
         {
-            var disco = await DiscoveryClient.GetAsync(Constants.Authority);
+            var disco = await GetAsync(Constants.Authority);
             if (disco.IsError) throw new Exception(disco.Error);
 
             var client = new TokenClient(
@@ -39,7 +40,7 @@ namespace ConsoleResourceOwnerFlow
                 acr_values = "tenant:custom_account_store1 foo bar quux"
             };
 
-            return await client.RequestResourceOwnerPasswordAsync("bob", "bob", "api1 api2.read_only", optional);
+            return await client.RequestResourceOwnerPasswordAsync("bob", "bob", "api1 api2.read_only offline_access", optional);
         }
 
         static async Task CallServiceAsync(string token)
@@ -56,6 +57,15 @@ namespace ConsoleResourceOwnerFlow
 
             "\n\nService claims:".ConsoleGreen();
             Console.WriteLine(JArray.Parse(response));
+        }
+
+        public static async Task<DiscoveryResponse> GetAsync(string authority)
+        {
+            using (var client = new DiscoveryClient(authority))
+            {
+                client.Policy.RequireHttps = false;
+                return await client.GetAsync().ConfigureAwait(false);
+            }
         }
     }
 }
