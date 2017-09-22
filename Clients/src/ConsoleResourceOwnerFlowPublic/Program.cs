@@ -39,7 +39,7 @@ namespace ConsoleResourceOwnerFlowPublic
                 acr_values = "tenant:custom_account_store1 foo bar quux"
             };
 
-            return await client.RequestResourceOwnerPasswordAsync("bob", "bob", "api1 api2.read_only", optional);
+            return await client.RequestResourceOwnerPasswordAsync("bob", "bob.password", "api1 api2.read_only", optional);
         }
 
         static async Task CallServiceAsync(string token)

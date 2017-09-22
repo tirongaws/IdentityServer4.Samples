@@ -31,7 +31,7 @@ namespace ConsoleClientCredentialsFlow
             var client = new TokenClient(
                 disco.TokenEndpoint,
                 "client",
-                "secret");
+                "client.secret");
 
             return await client.RequestClientCredentialsAsync("api1");
         }

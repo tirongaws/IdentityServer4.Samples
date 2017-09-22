@@ -42,7 +42,7 @@ namespace ConsoleCustomGrant
             var client = new TokenClient(
                 disco.TokenEndpoint,
                 "client.custom",
-                "secret");
+                "client.custom.secret");
 
             var customParameters = new Dictionary<string, string>
                 {

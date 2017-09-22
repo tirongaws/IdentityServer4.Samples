@@ -27,7 +27,7 @@ namespace ConsoleIntrospectionClient
             var client = new TokenClient(
                 disco.TokenEndpoint,
                 "roclient.reference",
-                "secret");
+                "roclient.reference.secret");
 
             return await client.RequestResourceOwnerPasswordAsync("bob", "bob", "api1 api2.read_only");
         }
@@ -40,7 +40,7 @@ namespace ConsoleIntrospectionClient
             var client = new IntrospectionClient(
                 disco.IntrospectionEndpoint,
                 "api1",
-                "secret");
+                "api1.secret");
 
             var request = new IntrospectionRequest
             {

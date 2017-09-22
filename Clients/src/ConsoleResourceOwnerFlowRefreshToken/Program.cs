@@ -25,7 +25,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
             _tokenClient = new TokenClient(
                 disco.TokenEndpoint,
                 "roclient",
-                "secret");
+                "roclient.secret");
 
             var response = await RequestTokenAsync();
             response.Show();
@@ -53,7 +53,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         {
             return await _tokenClient.RequestResourceOwnerPasswordAsync(
                 "bob",
-                "bob",
+                "bob.password", 
                 "api1 api2.read_only offline_access");
         }
 

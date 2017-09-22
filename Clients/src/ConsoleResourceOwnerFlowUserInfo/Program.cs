@@ -28,9 +28,9 @@ namespace ConsoleResourceOwnerFlowUserInfo
             var client = new TokenClient(
                 disco.TokenEndpoint,
                 "roclient",
-                "secret");
+                "roclient.secret");
 
-            return await client.RequestResourceOwnerPasswordAsync("bob", "bob", "openid custom.profile");
+            return await client.RequestResourceOwnerPasswordAsync("bob", "bob.password", "openid custom.profile");
         }
 
         static async Task GetClaimsAsync(string token)

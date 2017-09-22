@@ -34,7 +34,7 @@ Oidc.Log.logger = window.console;
 Oidc.Log.level = Oidc.Log.INFO;
 
 var mgr = new Oidc.UserManager(config);
-
+ 
 mgr.events.addUserLoaded(function (user) {
     display("#response", { message: "User loaded" });
     showTokens();
