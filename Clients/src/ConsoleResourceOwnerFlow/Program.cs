@@ -20,6 +20,7 @@ namespace ConsoleResourceOwnerFlow
 
             Console.ReadLine();
             await CallServiceAsync(response.AccessToken);
+            Console.ReadLine();
         }
 
         static async Task<TokenResponse> RequestTokenAsync()
@@ -30,7 +31,7 @@ namespace ConsoleResourceOwnerFlow
             var client = new TokenClient(
                 disco.TokenEndpoint,
                 "roclient",
-                "secret");
+                "roclient.secret");
 
             // idsrv supports additional non-standard parameters 
             // that get passed through to the user service

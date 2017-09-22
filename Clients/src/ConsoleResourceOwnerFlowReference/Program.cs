@@ -20,6 +20,7 @@ namespace ConsoleResourceOwnerFlowReference
 
             Console.ReadLine();
             await CallServiceAsync(response.AccessToken);
+            Console.ReadLine();
         }
 
         static async Task<TokenResponse> RequestTokenAsync()
@@ -30,9 +31,9 @@ namespace ConsoleResourceOwnerFlowReference
             var client = new TokenClient(
                 disco.TokenEndpoint,
                 "roclient.reference",
-                "secret");
+                "roclient.reference.secret");
 
-            return await client.RequestResourceOwnerPasswordAsync("bob", "bob", "api1");
+            return await client.RequestResourceOwnerPasswordAsync("bob", "bob.password", "api1");
         }
 
         static async Task CallServiceAsync(string token)

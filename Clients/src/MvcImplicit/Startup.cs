@@ -1,7 +1,9 @@
 ﻿using Clients;
 using IdentityModel;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -33,6 +35,14 @@ namespace MvcImplicit
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            //services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                        .AddCookie(o => o.LoginPath = new PathString("/login"));
+                        //.AddFacebook(o =>
+                        //{
+                        //    o.AppId = Configuration["facebook:appid"];
+                        //    o.AppSecret = Configuration["facebook:appsecret"];
+                        //});
         }
 
         public void Configure(IApplicationBuilder app)
@@ -48,19 +58,24 @@ namespace MvcImplicit
 
             app.UseStaticFiles();
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationScheme = "Cookies",
+            //var c = new Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationOptions
+            //{
+            //    //AuthenticationScheme = "Cookies",
 
-                AutomaticAuthenticate = true,
+            //    //AutomaticAuthenticate = true,
 
-                ExpireTimeSpan = TimeSpan.FromMinutes(60),
-                CookieName = "mvcimplicit"
-            });
+            //    ExpireTimeSpan = TimeSpan.FromMinutes(60),
+            //    CookieDomain = "mvcimplicit"
+            //};
+           
+            //app.UseCookieAuthentication(c);
+
+            app.UseAuthentication();
+
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-            app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
+            app.UseOpenIdConnectAuthentication(new Microsoft.AspNetCore.Authentication.OpenIdConnectOpenIdConnectOptions
             {
                 AuthenticationScheme = "oidc",
                 SignInScheme = "Cookies",

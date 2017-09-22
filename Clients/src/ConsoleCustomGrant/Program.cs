@@ -31,6 +31,7 @@ namespace ConsoleCustomGrant
 
             Console.ReadLine();
             await CallServiceAsync(response.AccessToken);
+            Console.ReadLine();
         }
 
         static async Task<TokenResponse> RequestTokenAsync(string grantType)
@@ -41,7 +42,7 @@ namespace ConsoleCustomGrant
             var client = new TokenClient(
                 disco.TokenEndpoint,
                 "client.custom",
-                "secret");
+                "client.custom.secret");
 
             var customParameters = new Dictionary<string, string>
                 {
